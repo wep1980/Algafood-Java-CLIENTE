@@ -1,7 +1,10 @@
 package br.com.wepdev.algafoodjavacliente.api;
 
+import br.com.wepdev.algafoodjavacliente.model.RestauranteModel;
 import br.com.wepdev.algafoodjavacliente.model.RestauranteResumoModel;
+import br.com.wepdev.algafoodjavacliente.model.input.RestauranteInput;
 import lombok.AllArgsConstructor;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,7 +22,7 @@ import java.util.List;
 public class RestauranteClient {
 
 
-    private static final String RESOURCE_PATH = "/restaurantess";
+    private static final String RESOURCE_PATH = "/restaurantes";
 
     private String url;
 
@@ -43,6 +46,18 @@ public class RestauranteClient {
             throw new ClientApiException(e.getMessage(), e);
 
         }
+    }
 
+
+
+    public RestauranteModel adicionar(RestauranteInput restaurante) {
+        var resourceUri = URI.create(url + RESOURCE_PATH);
+
+        try {
+            return restTemplate
+                    .postForObject(resourceUri, restaurante, RestauranteModel.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClientApiException(e.getMessage(), e);
+        }
     }
 }
